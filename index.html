@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Appcloner Maker</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+        <style>
+        .config-section {
+            margin-bottom: 1rem;
+        }
+        .bootstrap-switch-container {
+            font-size: 0.875rem;
+        }
+        .floating-button {
+            position: fixed;
+            bottom: 50px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .search-container {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 100;
+            padding: 0.5rem 0;
+        }
+        .category {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .category-content {
+            display: none;
+        }
+        .category-header {
+            cursor: pointer;
+        }
+    </style>
+    </head>
+    <body class="bg-gray-100 min-h-screen">
+        <div class="container mx-auto p-4 max-w-4xl">
+            <h1 class="text-4xl font-bold mb-8 text-center text-blue-800">Appcloner Maker</h1>
+            <div id="configCard" class="bg-white shadow-lg rounded-lg overflow-hidden">
+                <div class="bg-blue-600 text-white px-6 py-4 text-xl font-semibold">
+                    Configuration Editor
+                </div>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search for elements..." class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="p-4">
+                    <div id="config-editor" class="space-y-4"></div>
+                </div>
+            </div>
+        </div> <button onclick="saveConfig()" class="floating-button px-6 py-3 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 shadow-lg"> Save Configuration </button>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <div id="visitorCounter"></div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/js/bootstrap-switch.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+        <script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/js/bootstrap-switch.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+        <script>
+        const jsonConfig = {
+          "Cloning Options": {
+            "cloningMode": "DEFAULT",
+            "manifestCompatibilityMode": false,
+            "skipAssetFiles": false,
+            "skipNativeLibraries": false,
+            "nativeMethodWorkaround": false,
+            "ignoreCrashes": false,
+            "ignoreCrashesAdvancedMode": false,
+            "ignoreCrashesShowCrashMessages": false,
+            "disableSignatureVerification":false,
+            "disableLicenseValidation": false,
+            "packageNameCheckWorkaround": false,
+            "googlePlayServicesWorkaround": false,
+            "hideGooglePlayServices": false,
+            "disableRuntimeModdingOptions": false,
+            "hookFramework": "AUTO",
+            "earlyHooks": false,
+            "facebookLoginBehavior": "WEB_ONLY",
+            "twitterLoginBehavior": "WEB_ONLY",
+            "hideEmulator": false,
+            "cloneCheckWorkaround": false,
+            "processNameWorkaround": false,
+            "singleProcess": false,
+            "singleProcessSilent": false,
+            "updateCheck": false,
+            "preventExternalUpdates": false,
+            "preventExternalUpdatesIncreaseVersionCode": false,
+            "allowInMultiAccountApps": false,
+            "hideFromClonedApps": false,
+            "noKill": false,
+            "noKillCrashWorkaround": false,
+            "noKillCrashWorkaroundMethod": "NOP",
+            "noKillPreventFinishingActivities": false
+            
+          },
+          "Identity and Tracking Options": {
+            "hideWifiInfo": false,
+            "hideSimOperatorInfo": false,
+            "hideGpuInfo": false,
+            "hideCpuInfo": false,
+            "hideDnsServers": false,
+            "changeAdvertisingIdentifiers": "NO_CHANGE",
+            "changeAmazonAdvertisingId": "NO_CHANGE",
+            "changeAndroidId": "NO_CHANGE",
+            "changeAndroidSerial": "NO_CHANGE",
+            "changeAppSetId": "NO_CHANGE",
+            "changeWifiMacAddress": "NO_CHANGE",
+            "changeBluetoothMacAddress": "NO_CHANGE",
+            "changeEthernetMacAddress": "NO_CHANGE",
+            "changeFacebookAttributionId": "NO_CHANGE",
+            "changeGoogleAdvertisingId": "NO_CHANGE",
+            "changeGoogleServiceFrameworkId": "NO_CHANGE",
+            "changeHuaweiAdvertisingId": "NO_CHANGE",
+            "changeImei": "NO_CHANGE",
+            "changeImsi": "NO_CHANGE",
+            "changeLocale": "NO_CHANGE",
+            "changeOpenId": "NO_CHANGE",
+            "newIdentity": false,
+            "newIdentityAutomaticallyRestartApp": true,
+            "newIdentityClearCache": false,
+            "newIdentityDeleteAppData": false,
+            "newIdentityShowNotification": true,
+            "newIdentityPersistentNotification": false,
+            "randomizeFileTimestamps": false,
+            "randomizeBootId": false,
+            "randomizeBuildProps": false,
+            "filterDevicesDatabase": false,
+            "devicesDatabaseUseAndroidVersion": false,
+            "devicesDatabaseSdkVersions": {},
+            "randomizeBuildPropsDeviceNamePrefix": "My",
+            "randomizeDeviceUptime": false,
+            "randomizeDrmIdentifiers": false,
+            "randomizeInstallUpdateTime": false,
+            "randomizeBatteryLevel": false,
+            "randomizeBatteryLevelMax": 100,
+            "randomizeBatteryLevelMin": 50,
+            "randomizeBatteryTemp": false,
+            "randomizeBatteryTempMax": 40,
+            "randomizeBatteryTempMin": 20,
+            "randomizeTotalFreeMemory": false,
+            "randomizeTotalFreeStorage": false,
+            "randomizeUserCreationTime": false
+          },
+          "Privacy Options": {
+            "passwordProtectApp": false,
+            "patternLockApp": false,
+            "otpProtectApp": false,
+            "stealthMode": false,
+            "stealthModeUseFingerprint": false,
+            "allowScreenshots": false,
+            "allowSharingImages": false,
+            "disableClipboardReadAccess": false,
+            "disableClipboardWriteAccess": false,
+            "disableContactsAccess": false,
+            "disableDeviceAdmin": false,
+            "disableSensorsAccess": false,
+            "disableShareActions": false,
+            "hideAllInstalledApps": false,
+            "freezeFakeTime": true,
+            "freezeTime": false,
+            "spoofRandomLocation": false,
+            "spoofLocationUseIpLocation": false,
+            "spoofLocationApi": false,
+            "spoofLocationCalculateBearing": false,
+            "spoofLocationCompatibilityMode": false,
+            "spoofLocationInterval": 10,
+            "spoofLocationShareLocationReceiver": false,
+            "spoofLocationShowSpoofLocationNotification": false,
+            "spoofLocationSimulatePositionalUncertainty": false,
+            "favoriteLocationsShowDistance": false,
+            "spoofGpsTrackDuration": 60.0,
+            "spoofGpsTrackIndex": 0,
+            "spoofGpsTrackPlaybackMode": "LOOP",
+            "spoofGpsTrackStartInPausedMode": false,
+            "spoofGpsTrackUseElevationFromFile": false,
+            "spoofGpsTracks": [],
+            "hideRoot": false,
+            "hideVpnConnection": false,
+            "hideProxyConnection": false,
+            "preventScreenshotDetection": false,
+            "autoIncognitoMode": false,
+            "incognitoKeyboard": false,
+            "incognitoMode": false,
+            "persistentClipboard": false,
+            "privateClipboard": false,
+            "fakeDateDay": 0,
+            "fakeDateIncrementDateByDays": 1,
+            "fakeDateIncrementDateOnExit": false,
+            "fakeDateMonth": 0,
+            "fakeDateYear": 0,
+            "fakeWifiNetworks": [""],
+            "favoriteLocations": [""],
+            "bypassAccessibilityServiceCheck": false,
+            "preventScreenshots": false,
+            "preventScreenshotDetection": false,
+            "preventScreenshotDetectionAdvancedMode": false,
+            "preventScreenshotDetectionAndroid14Support": false,
+            "preventScreenRecordingDetection": false,
+            "hideAllInstalledApps": false,
+            "hideAllInstalledAppsExceptions": [],
+            "hideAppCloner": false,
+            "hideOtherApps": [],
+            "hideOtherAppsSubstrings": [],
+            "hidePowerSavingMode": false,
+            "hidePasswordCharacters": false,
+            "panicModeAdbDebuggingEnabled": false,
+            "panicModeMockLocationDetected": false,
+            "panicModeRootDetected": false,
+            "panicModeShowNotification": false,
+            "panicModeUnauthorized": false,
+            "panicModeUnauthorizedMaxAttempts": 3,
+            "panicModeUsbDeviceAttached": false,
+            "disableLogcatLogging": false,
+            "disableInAppReviews": false,
+            "disableSensorsAccess": false,
+            "disableAccessibilityServices": false,
+            "disableAccountsAccess": false,
+            "disableCalendarAccess": false,
+            "disableCallLogSmsAccess": false,
+            "disablePhotoMediaAccess": false,
+            "disableUsbAccessoryModeEvents": false,
+            "disableUsbHostModeEvents": false
+          },
+          "Display Options": {
+            "addSnow": false,
+             "snowColor": -1,
+             "snowCount": 150,
+             "snowCustomSymbols": "❉❇❈❊❅",
+             "snowFadeBegin": 1.0,
+             "snowFadeEnd": 1.0,
+             "snowOpacity": 1.0,
+             "snowSize": "MEDIUM",
+             "snowSpeed": "NORMAL",
+             "snowUseCustomSymbols": false,
+             "addPadding": {
+                "backgroundColor": 0,
+                "bottomPadding": 0,
+                "enabled": false,
+                "leftPadding": 0,
+                "rightPadding": 0,
+                "setValuesIndividually": false,
+                "topPadding": 0
+             },
+            "fontScale": 1.0,
+            "allowDarkMode": "NO_CHANGE",
+            "invertColorsDarkMode": false,
+            "invertColorsDarkModeEndTime": "07:00",
+            "invertColorsDarkModeExcludeWebViews": false,
+            "invertColorsDarkModeSchedule": false,
+            "invertColorsDarkModeStartTime": "21:00",
+            "rotationLock": "NONE",
+            "screenTextReplacements": [],
+            "largerAspectRatios": "NO_CHANGE",
+            "largerAspectRatiosAllowOverride": false,
+            "pictureInPictureSupport": false,
+            "pictureInPictureNotification": false,
+            "pictureInPictureLongPress": false,
+            "pictureInPictureKeyCode": 0,
+            "multiWindow": false,
+            "freeFormWindow": false,
+            "skipDialogsStrings": [""],
+            "skipDialogsStacktraceStrings": [""],
+            "skipDialogsMonitorStacktraces": false,
+            "hideMenuItemsStrings": [],
+            "immersiveModeIgnoreNotch": false,
+            "preventFloatingPopups": false,
+            "preventFloatingPopupsAllowDialogs": false,
+            "lightStatusBar": "NO_CHANGE",
+            "flipScreenHorizontally": false,
+            "flipScreenVertically": false,
+            "keepScreenOn": false,
+            "showTouches": false,
+            "webViewTextZoom": 1.0,
+            "lightStatusBar": "NO_CHANGE",
+            "immersiveModeIgnoreNotch": false,
+            "floatingApp": false,
+            "floatingAppIconSize": "MEDIUM",
+            "floatingAppLowerTargetSdk": false,
+            "floatingAppNotchMargin": false,
+            "floatingAppOpacity": 1.0,
+            "inAppLiveChat": false,
+            "inAppLiveChatOpacity": 1.0,
+            "welcomeMessageDelay": 2000,
+            "welcomeMessageEnablePlaceholders": false,
+            "welcomeMessageMode": "DIALOG",
+            "welcomeMessageShowDialogAlways": false,
+            "welcomePopupImage": false,
+            "welcomePopupImageDuration": 3.0,
+            "welcomePopupImageWidth": 0.8,
+            "largerAspectRatios": "NO_CHANGE",
+            "largerAspectRatiosAllowOverride": false,
+            "enableViews": "DISABLED",
+            "immersiveModeIgnoreNotch": false,
+            "invertToasts": false,
+            "screenSaverDelayMinutes": 0,
+            "screenSaverExitApp": false,
+            "screenSaverMuteVolume": false,
+            "splashScreen": false,
+            "splashScreenBackgroundColor": -1,
+            "splashScreenBackgroundOpacity": 1.0,
+            "splashScreenCenterCropImage": false,
+            "splashScreenDuration": 3,
+            "splashScreenMargin": 0.3,
+            "disableNestedScrolling": false,
+            "disableHardwareAcceleration": false,
+            "blurImageViewsMode": "TAP",
+            "blurImageViewsStrength": "DISABLED",
+            "noRelayoutOnRotation": false,
+            "disableFullscreenEditing": false,
+            "rtlSupport": "NO_CHANGE",
+            "activityTransitions": "NO_CHANGE",
+            "tiltText": 0,
+            "leanbackBannerImage": false,
+            "leanbackLauncherSupport": false
+          },
+          
+           "Media Options": {
+            "muteOnStart": false,
+            "muteWhileInForeground": false,
+            "muteForTextOnScreen": [],
+            "setVolumeOnStart": false,
+            "setVolumeOnStartMaxVolume": 15,
+            "setVolumeOnStartMinVolume": 10,
+            "setVolumeOnStartRandomRange": false,
+            "setVolumeOnStartVolume": 10,
+            "preventAppFromChangingVolume": false,
+            "audioPlaybackCapture": "NO_CHANGE",
+            "disableChromecastButton": false,
+            "hideScreenMirroring": false,
+            "disableCameras": false,
+            "fakeCamera": false,
+            "fakeCameraAddPictureAttributes": false,
+            "fakeCameraAddSpoofedLocation": false,
+            "fakeCameraAlternativeMode": false,
+            "fakeCameraAppSupport": false,
+            "fakeCameraCloseStreamWorkaround": false,
+            "fakeCameraFlipHorizontally": false,
+            "fakeCameraOpenStreamWorkaround": false,
+            "fakeCameraRandomizePicture": false,
+            "fakeCameraRandomizePictureStrength": 25,
+            "fakeCameraResizePicture": false,
+            "fakeCameraRotation": "NO_CHANGE",
+            "keepPlayingMedia": false,
+            "showOnLockScreen": false,
+            "showOnSecondaryDisplay": false,
+            "showOnSecondaryDisplayActivitiesNames": [],
+           "showRoundTripTime": "DISABLED",
+           "showStreamVideoViewsOnTop": false,
+           "showStreamVideoViewsOnTopImmersiveMode": false,
+            "muteMic": false,
+            "normalAudioMode": false,
+            "startSound": false,
+            "disableMediaBrowserService": false
+          },
+          "Navigation Options": {
+            "backAlwaysFinishes": false,
+            "minimizeOnBack": "NO_CHANGE",
+            "activityMonitor": false,
+            "blockActivitiesAfterCreation": false,
+            "blockActivitiesNames": [],
+            "blockActivitiesPreventFinishingActivities": false,
+            "popupBlocker": false,
+            "popupBlockerSilent": false,
+            "swipeToGoBack": false,
+            "swipeToGoBackBorder": "LEFT",
+            "swipeToGoBackDirection": "RIGHT",
+            "shakeAction": "NONE",
+            "fingerprintLongTapAction": "NONE",
+            "fingerprintTapAction": "NONE",
+            "pressBackAgainToExit": false,
+            "longPressBackAction": "NONE",
+            "longPressBackForOptionsMenu": false,
+            "floatingBackButton": false,
+            "floatingBackButtonColor": -7829368,
+            "floatingBackButtonDoubleBackTap": false,
+            "floatingBackButtonLongPressAction": "NONE",
+            "floatingBackButtonOpacity": 0.5,
+            "floatingBackButtonPositionPerScreen": false,
+            "floatingBackButtonSize": "MEDIUM",
+            "kioskMode": "DISABLED"
+          },
+          "WebView Options": {
+            "changeWebViewUserAgent": "NO_CHANGE",
+            "customWebViewUserAgent": "Mozilla/5.0 (Linux; Android {system-property:ro.build.version.release}; {system-property:ro.product.model} Build/{system-property:ro.build.id}; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/128.0.****.### Mobile Safari/537.36",
+            "geckoViewSupport": false,
+            "changeSystemUserAgent": "NO_CHANGE",
+            "customSystemUserAgent": "Dalvik/2.1.0 (Linux; U; Android {system-property:ro.build.version.release}; {system-property:ro.product.model} Build/{system-property:ro.build.id})",
+            "userAgentWorkaround": false,
+            "userAgentWorkaroundSilent": false,
+            "webViewDisableAudioContext": false,
+            "webViewDisableWebGl": false,
+            "webViewDisableWebRtc": false,
+            "webViewTextZoom": 1.0,
+            "webViewMetricsOptOut": false,
+            "webViewOverrideUrlLoadingList": [""],
+            "webViewUrlDataMonitor": false,
+            "webViewUrlDataMonitorAutoCopy": false,
+            "webViewUrlDataMonitorAutoOpen": false,
+            "webViewUrlDataMonitorFilter": "DISABLED",
+            "webViewUrlDataMonitorFilterStrings": [""],
+            "webViewUrlDataMonitorShowJavaScriptUrls": false,
+            "webViewUrlDataMonitorShowOverrideUrlLoading": false,
+            "webViewUrlDataMonitorUrlDecode": false,
+            "webViewUrlEditor": false,
+            "showWebViewIFrameSourceCode": false,
+            "showWebViewSourceCode": false,
+            "showWebViewSourceCodeFilter": "DISABLED",
+            "showWebViewSourceCodeFilterStrings": [""]
+          },
+          "Storage Options": {
+            "installToSdCard": false,
+            "redirectExternalStorage": false,
+            "accessibleDataDirectory": true,
+            "accessibleDataDirectoryAdvancedMode": false,
+            "clearCacheOnExit": false,
+            "clearCacheWhenLowOnStorage": false,
+            "requestAllFilesAccessPermission": false,
+            "securelyDeleteFilesDirectoriesOnExit": false,
+            "promptKeepAppDataOnUninstall": false,
+            "bundleAppData": false,
+            "restoreAppDataOnEveryStart": false,
+            "bundleAppDataEncryptCertificate": false,
+            "bundleFilesDirectories": [""],
+            "bundleInternalFilesDirectories": [""],
+            "bundleOriginalApp": false,
+            "fileAccessMonitor": false,
+            "disableSpaceManagement": false,
+            "deleteFilesDirectoriesOnExit": [""],
+            "preserveExpansionFiles": false
+            
+          },
+          "Launching Options": {
+            "disableWidgets": false,
+            "removeLauncherIcon": false,
+            "removeLauncherIconAndroidTv": false,
+            "removeLauncherIconProtectFromShortcutMakers": false,
+            "removeLauncherIconShortcuts": false,
+            "showInPowerMenu": false,
+            "showOnLockScreen": false,
+            "persistentApp": false,
+            "persistentAppAccessibilityService": false,
+            "noBackgroundServices": false,
+            "forceCloseOnExit": false,
+            "fileUrlAssociations": [],
+            "fileUrlAssociationsEnablePlaceholders": false,
+            "autoStart": "NO_CHANGE",
+            "launchQuickSettingsTile": false,
+            "launchWithNfcTag": false,
+            "exitAppIfPasswordIncorrect": true,
+            "exitAppOnScreenOff": false,
+            "exitAppWhenStorageUnmounted": false,
+            "launchAppWhenStorageMounted": false,
+            "documentLaunchMode": false,
+            "disableWakeLocks": false,
+            "makeHomeApp": false,
+            "makeAssistApp": false,
+            "makeCameraApp": false,
+            "requestAllPermissions": false,
+            "requestPermissions": [],
+            "requestIgnoreBatteryOptimizations": false,
+            
+            
+          },
+          "Networking Options": {
+            "disableAllNetworking": false,
+            "disableMobileData": false,
+            "httpProxy": false,
+            "hideMobileHotspot": false,
+            "hideCaCerts": false,
+            "hideLinkAddress": false,
+            "hostMapperSilent": false,
+            "hostsBlocker": false,
+            "hostsBlockerAllowAllOtherHosts": false,
+            "overrideBindAddress": "NO_CHANGE",
+            "disableClearTextNetworking": false,
+            "disableNetworkingWhenScreenOff": false,
+            "disableNetworkingWithoutVpn": false,
+            "mockEthernetConnection": "NO_CHANGE",
+            "mockMobileConnection": "NO_CHANGE",
+            "mockWifiConnection": "NO_CHANGE",
+            "useSocksVpnService": false,
+            "socksProxy": false,
+            "socksProxyHost": "",
+            "socksProxyPort": 1080,
+            "socksProxyAlternativeMode": false,
+            "socksProxyApi": false,
+            "socksProxyEnablePlaceholders": false,
+            "socksProxyList": [""],
+            "socksProxyListRandomProxy": false,
+            "socksProxyListShowProxySelectorNotification": false,
+            "socksProxySilent": false,
+            "dnsOverHttps": "DISABLED",
+            "dnsOverHttpsCustomUrl": "https://doh.opendns.com/dns-query",
+            "dnsOverHttpsSilent": false
+          },
+          "Notification Options": {
+            "blockAllNotifications": false,
+            "notificationPriority": "NO_CHANGE",
+            "notificationSound": "NO_CHANGE",
+            "notificationQuietTime": false,
+            "notificationQuietTimeEnd": "07:00",
+            "notificationQuietTimeStart": "21:00",
+            "notificationSnoozeTimeout": 0,
+            "notificationTimeout": 0,
+            "notificationTintStatusBarIcon": false,
+            "ongoingNotifications": "NO_CHANGE",
+            "notificationsAddMuteBlockActions": false,
+            "notificationColorUseStatusBarColor": false,
+            "notificationDots": false,
+            "simpleNotifications": false,
+            "singleNotificationGroup": false,
+            "notificationFilter": [],
+            "notificationForOptionsMenu": false,
+            "notificationTextReplacements": [],
+            "notificationVisibility": "NO_CHANGE",
+            "toastDuration": "NO_CHANGE",
+            "toastFilter": [],
+            "toastHorizontalAlignment": "CENTER",
+            "toastOpacity": 1.0,
+            "toastPosition": false,
+            "toastPrefixEnablePlaceholders": false,
+            "toastVerticalAlignment": "BOTTOM"
+            
+          },
+          "Game Options": {
+            "fpsMonitor": false,
+            "fpsMonitorColor": -7829368,
+            "fpsMonitorHorizontalAlignment": "RIGHT",
+            "fpsMonitorOpacity": 1.0,
+            "fpsMonitorSize": "MEDIUM",
+            "fpsMonitorVerticalAlignment": "BOTTOM",
+            "gpsJoystick": false,
+            "gpsJoystickColor": -7829368,
+            "gpsJoystickHorizontalAlignment": "LEFT",
+            "gpsJoystickMaxSpeed": 1.5,
+            "gpsJoystickOpacity": 1.0,
+            "gpsJoystickSize": "MEDIUM",
+            "gpsJoystickVerticalAlignment": "BOTTOM",
+            "markAsGame": false
+          },
+          "Android TV & Wear OS Options": {
+            "markAsGame": false,
+            "samsungDexSupport": false,
+            "joystickPointer": false,
+            "joystickPointerAutoHide": false,
+            "joystickPointerAutoScroll": false,
+            "joystickPointerColor": -7829368,
+            "joystickPointerOpacity": 1.0,
+            "joystickPointerScrollSpeed": 1,
+            "joystickPointerShowInitially": true,
+            "joystickPointerSize": "MEDIUM",
+            "joystickPointerToggleLongPress": true,
+            "enableTvVersion": false,
+            "makeWatchApp": false
+          },
+          "Automation Options": {
+           "restoreAutoRotateOnExit": false,
+           "restoreAutoRotateOnPause": false,
+           "restoreBluetoothStateOnExit": false,
+           "restoreBluetoothStateOnPause": false,
+           "restoreBrightnessOnExit": false,
+           "doNotDisturb": false,
+           "restoreDoNotDisturbOnExit": false,
+           "restoreDoNotDisturbOnPause": false,
+           "restoreWifiStateOnExit": false,
+           "restoreWifiStateOnPause": false,
+            "taskerStartTaskName": "",
+            "taskerStopTaskName": "",
+            "scrollWithKeyboard": {
+                "enabled": false,
+                "scrollDownKeyCode": "NUMPAD_2",
+                "scrollLeftKeyCode": "NUMPAD_4",
+                "scrollRightKeyCode": "NUMPAD_6",
+                "scrollSpeed": 1,
+                "scrollUpKeyCode": "NUMPAD_8",
+                },
+            "autoPressButtons": [""],
+            "autoPressButtonsEnablePlaceholders": false,
+            "autoPressButtonsInBackground": false,
+            "autoPressButtonsPerformTouchClicks": false,                "exitTimerAction": "DISABLED",
+            "exitTimerSeconds": 10,
+            "exitTimerWarning": false,
+            "exitTimerWarningSeconds": 5
+          },
+          "Sharing, Selection & Copy Options": {
+            "copyTextFromTextViews": "DISABLED",
+            "allowTextSelection": false,
+            "alwaysAllowCopyPaste": false,
+            "longPressToTranslate": false,
+            "allowSharingImagesFormat": "JPEG",
+            "clipboardTimeout": false,
+            "longPressToRevealPassword": false,
+            "longPressToTranslateMode": "REPLACE_TEXT",
+            "longPressToTranslateTargetLanguage": "en",
+            "copyTextWhileScrolling": false,
+            "copyTextWhileScrollingIncludeHiddenViews": false,
+            "copyTextWhileScrollingMode": "COPY_EVERYTHING"
+          },
+          "Manifest & Resource Options": {
+            "manifestCompatibilityMode": true,
+            "manifestEditor": false,
+            "mergeCustomClassesDex": false,
+            "mergeOriginalClassesDex": false,
+            "xmlResourceEditor": false,
+            "mappedColorResources": {},
+            "mappedHosts": {},
+            "mappedKeys": {},
+            "iconEffect": "NONE",
+            "iconInvertColors": false,
+            "iconLightness": 0.0,
+            "iconSaturation": 0.0,
+            "iconImage": false,
+            "badge": "",
+            "badgeAlignment": "TOP",
+            "badgeBackgroundColor": -460552,
+            "badgeBorderColor": -11184811,
+            "badgeImage": false,
+            "badgeTextColor": -11184811,
+            "iconRotation": 180,
+            "iconSaturation": 0.0
+          },
+          "Developer Options": {
+            "makeDebuggable": false,
+            "makeWebViewsDebuggable": false,
+            "debugLogGetPackageName": false,
+            "serialFormat": "GOOGLE",
+            "debugUtils": false,
+            "logcatViewer": false,
+            "databaseEditor": false,
+            "dexDumper": false,
+            "debugHttpAnalyzer": false,
+            "overrideSharedPreferences": [],
+            "customBuildProps": [],
+            "customCodeLanguage": "JAVA",
+            "scanditLicenseKey": "DISABLED",
+            "systemPropertyCheckList": [],
+            "nativeMethodWorkaround": false,
+            "disableStrictMode": false,
+            "stethoSupport": false,
+            "bringAppToFrontNotification": false,
+            "signAsSystemApp": false,
+            "jobSchedulingMonitor": false,
+            "jobSchedulingMultiplier": 1.0,
+            "waitForDebugger": false,
+            "performGarbageCollectionInterval": 60,
+            "performGarbageCollectionPeriodically": false,
+            "performGarbageCollectionSilently": false,
+            "performGarbageCollectionWhenLeavingApp": false
+            }
+        };
+
+        function createConfigEditor(config, parentElement) {
+            for (const category in config) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                categoryDiv.dataset.category = category;
+
+                const categoryHeader = document.createElement('div');
+                categoryHeader.className = 'category-header bg-gray-200 p-3 rounded-lg mb-2 flex justify-between items-center cursor-pointer';
+                categoryHeader.innerHTML = `
+                    <h2 class="text-lg font-semibold text-blue-700">${category}</h2>
+                    <svg class="w-5 h-5 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                `;
+                categoryDiv.appendChild(categoryHeader);
+
+                const categoryContent = document.createElement('div');
+                categoryContent.className = 'category-content';
+                categoryDiv.appendChild(categoryContent);
+
+                for (const key in config[category]) {
+                    const value = config[category][key];
+                    const section = document.createElement('div');
+                    section.className = 'config-section bg-gray-50 p-3 rounded-lg border-l-4 border-blue-300 mb-2';
+                    section.dataset.key = key.toLowerCase();
+                    section.dataset.category = category;
+
+                    const label = document.createElement('label');
+                    label.textContent = key;
+                    label.className = 'block text-sm font-medium text-gray-700 mb-1';
+                    section.appendChild(label);
+
+                    if (typeof value === 'boolean') {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.checked = value;
+                        checkbox.onchange = () => {
+                            config[category][key] = checkbox.checked;
+                        };
+                        section.appendChild(checkbox);
+                        $(checkbox).bootstrapSwitch({
+                            size: 'small',
+                            onColor: 'success',
+                            offColor: 'danger'
+                        });
+                    } else if (typeof value === 'string' && [
+                        "changeAdvertisingIdentifiers", "changeAmazonAdvertisingId", "changeAndroidId",
+                        "changeAndroidSerial", "changeAppSetId", "changeBluetoothMacAddress",
+                        "changeEthernetMacAddress", "changeFacebookAttributionId", "changeGoogleAdvertisingId",
+                        "changeGoogleServiceFrameworkId", "changeHuaweiAdvertisingId", "changeImei",
+                        "changeImsi", "changeLocale", "changeOpenId", "changeSystemUserAgent",
+                        "changeWebViewUserAgent", "changeWifiMacAddress"
+                    ].includes(key)) {
+                        const select = document.createElement('select');
+                        select.className = 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm';
+                        ["NO_CHANGE", "RANDOM", "CUSTOM", "HIDE"].forEach(option => {
+                            const optionElement = document.createElement('option');
+                            optionElement.value = option;
+                            optionElement.textContent = option;
+                            if (option === value) {
+                                optionElement.selected = true;
+                            }
+                            select.appendChild(optionElement);
+                        });
+                        select.onchange = () => {
+                            config[category][key] = select.value;
+                        };
+                        section.appendChild(select);
+                    } else if (typeof value === 'string' && [
+                        "mockEthernetConnection", "mockMobileConnection", "mockWifiConnection"
+                    ].includes(key)) {
+                        const select = document.createElement('select');
+                        select.className = 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm';
+                        ["NO_CHANGE", "CONNECTED", "DISCONNECTED"].forEach(option => {
+                            const optionElement = document.createElement('option');
+                            optionElement.value = option;
+                            optionElement.textContent = option;
+                            if (option === value) {
+                                optionElement.selected = true;
+                            }
+                            select.appendChild(optionElement);
+                        });
+                        select.onchange = () => {
+                            config[category][key] = select.value;
+                        };
+                        section.appendChild(select);
+                    } else if (typeof value === 'string') {
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.value = value;
+                        input.className = 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm';
+                        input.onchange = () => {
+                            config[category][key] = input.value;
+                        };
+                        section.appendChild(input);
+                    } else if (typeof value === 'number') {
+                        const input = document.createElement('input');
+                        input.type = 'number';
+                        input.value = value;
+                        input.className = 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm';
+                        input.onchange = () => {
+                            config[category][key] = parseFloat(input.value);
+                        };
+                        section.appendChild(input);
+                    } else if (Array.isArray(value)) {
+                        const arrayInput = document.createElement('textarea');
+                        arrayInput.value = value.join('\n');
+                        arrayInput.className = 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm';
+                        arrayInput.rows = 3;
+                        arrayInput.onchange = () => {
+                            config[category][key] = arrayInput.value.split('\n').filter(item => item.trim() !== '');
+                        };
+                        section.appendChild(arrayInput);
+                    }
+
+                    categoryContent.appendChild(section);
+                }
+
+                parentElement.appendChild(categoryDiv);
+
+                categoryHeader.addEventListener('click', () => {
+                    const isHidden = categoryContent.style.display === 'none' || categoryContent.style.display === '';
+                    categoryContent.style.display = isHidden ? 'block' : 'none';
+                    categoryHeader.querySelector('svg').classList.toggle('rotate-180', isHidden);
+                });
+            }
+        }
+
+        function flattenJsonConfig(config) {
+            const flattenedConfig = {};
+            for (const category in config) {
+                for (const key in config[category]) {
+                    flattenedConfig[key] = config[category][key];
+                }
+            }
+            return flattenedConfig;
+        }
+        function updateVisitorCounter() {
+            let visitors = localStorage.getItem('visitors');
+            if (!visitors) {
+                visitors = 0;
+            }
+            visitors = parseInt(visitors) + 1;
+            localStorage.setItem('visitors', visitors);
+            document.getElementById('visitorCounter').textContent = `Unique Visitors: ${visitors}`;
+        }
+
+        // Call the updateVisitorCounter function when the page loads
+        window.addEventListener('load', updateVisitorCounter);
+        
+        function generateKeyFromPackageName(packageName) {
+            const FIXED_STRING = "/I am the one who knocks!";
+            const combinedString = packageName + FIXED_STRING;
+            const hash = CryptoJS.MD5(combinedString);
+            const keyBytes = hash.toString(CryptoJS.enc.Hex).substring(0, 32);
+            return CryptoJS.enc.Hex.parse(keyBytes);
+        }
+
+        function encryptAES(plainText, key) {
+            const encrypted = CryptoJS.AES.encrypt(plainText, key, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            return encrypted.toString();
+        }
+
+        function saveConfig() {
+            const packageName = prompt("Please enter the package name to encrypt the configuration:");
+            if (!packageName) {
+                alert("Package name is required to encrypt the configuration.");
+                return;
+            }
+
+            const flattenedConfig = flattenJsonConfig(jsonConfig);
+            const jsonString = JSON.stringify(flattenedConfig, null, 2);
+            const key = generateKeyFromPackageName(packageName);
+            const encryptedContent = encryptAES(jsonString, key);
+            const blob = new Blob([encryptedContent], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cloneSettings.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        const configEditor = document.getElementById('config-editor');
+        createConfigEditor(jsonConfig, configEditor);
+
+        const searchInput = document.getElementById('searchInput');
+
+        function filterConfig() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const categories = document.querySelectorAll('.category');
+            
+            categories.forEach(category => {
+                const sections = category.querySelectorAll('.config-section');
+                let hasVisibleSections = false;
+
+                sections.forEach(section => {
+                    const key = section.dataset.key;
+                    if (key.includes(searchTerm)) {
+                        section.style.display = 'block';
+                        hasVisibleSections = true;
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+
+                if (hasVisibleSections) {
+                    category.style.display = 'block';
+                    category.querySelector('.category-content').style.display = 'block';
+                    category.querySelector('.category-header svg').classList.add('rotate-180');
+                } else {
+                    category.style.display = 'none';
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', filterConfig);
+    </script>
+    </body>
+</html>
